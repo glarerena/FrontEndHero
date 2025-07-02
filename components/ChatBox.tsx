@@ -3,7 +3,6 @@ import ReactMarkdown from "react-markdown"
 import styles from "./Chatbox.module.scss" // Keep your custom styles
 import { Send } from "lucide-react"
 
-
 interface Message {
   role: 'user' | 'assistant';
   content: string;
@@ -21,22 +20,20 @@ export default function ChatBox() {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth"})
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
-  // Add effect to focus input when messages change
   useEffect(() => {
     if (!loading && inputRef.current) {
       inputRef.current.focus()
     }
   }, [messages, loading])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
     setError("")
 
-    // Add user message to chat history
     const userMessage: Message = { role: 'user', content: question }
     const updatedMessages = [...messages, userMessage]
     setMessages(updatedMessages)
@@ -45,17 +42,16 @@ export default function ChatBox() {
       const res = await fetch("http://localhost:3005/chatbot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           message: question,
-          history: messages // Send conversation history
+          history: messages
         }),
       })
 
       if (!res.ok) throw new Error("Something went wrong")
 
       const data = await res.json()
-      
-      // Add assistant response to chat history
+
       const assistantMessage: Message = { role: 'assistant', content: data.response }
       setMessages([...updatedMessages, assistantMessage])
     } catch {
@@ -68,7 +64,6 @@ export default function ChatBox() {
 
   const toggleMinimize = () => {
     if (open) {
-      // Initialize chat with welcome message
       setMessages([{
         role: 'assistant',
         content: "👋 Hello! I'm HERO — your Housing Essential Resource Organizer, to help navigate housing support across the Bay Area.\n\n⚠️ *This chatbot is an experimental tool. Please verify all information with official housing resources before making decisions.*\n\nHow can I help you today?"
@@ -79,37 +74,37 @@ export default function ChatBox() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      e.preventDefault();
-      handleSubmit(e as any);
+      e.preventDefault()
+      const fakeFormEvent = {
+        preventDefault: () => {}
+      } as React.FormEvent<HTMLFormElement>
+      handleSubmit(fakeFormEvent)
     }
   }
 
   return (
     <div className={styles.wrapper}>
-    {open ? (
-      <div className={styles.container}>
-        {/* HEADER */}
-        <div className={styles.header}>
-          <div
-            className={styles.headerTitle}
-            onClick={toggleMinimize}
-          >
-            HERO: Housing Essential Resource Organizer
+      {open ? (
+        <div className={styles.container}>
+          {/* HEADER */}
+          <div className={styles.header}>
+            <div className={styles.headerTitle} onClick={toggleMinimize}>
+              HERO: Housing Essential Resource Organizer
+            </div>
+            <img
+              src="/purple_house.png"
+              alt="Minimize chat"
+              className={styles.headerIcon}
+              onClick={toggleMinimize}
+            />
           </div>
-          <img
-            src="/purple_house.png"
-            alt="Minimize chat"
-            className={styles.headerIcon}
-            onClick={toggleMinimize}
-          />
-        </div>
 
           <div className={styles.content}>
             {messages.map((msg, i) => {
               const isAssistant = msg.role === "assistant";
               const parts = isAssistant
-                ? msg.content.split("\n\n")   // split listings on double-newlines
-                : [msg.content];              // user messages stay whole
+                ? msg.content.split("\n\n")
+                : [msg.content];
 
               return (
                 <div
@@ -126,7 +121,7 @@ export default function ChatBox() {
                           {props.children || "Link"}
                         </a>
                       ),
-                      p: ({ children }) => <span>{children}</span>, // inline first part
+                      p: ({ children }) => <span>{children}</span>,
                     }}
                   >
                     {parts[0]}
@@ -149,7 +144,7 @@ export default function ChatBox() {
                       </div>
                     ))}
                 </div>
-              );
+              )
             })}
 
             {error && <div className={styles.error}>{error}</div>}
@@ -183,5 +178,5 @@ export default function ChatBox() {
         </button>
       )}
     </div>
-  );
+  )
 }
