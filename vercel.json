@@ -1,9 +1,9 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "yarn build",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "installCommand": "npm install",
+  "installCommand": "yarn install",
   "env": {
     "NEXT_PUBLIC_API_URL": "https://hero-nestjs-api.onrender.com"
   }
-} 
+}
