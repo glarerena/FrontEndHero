@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react"
 import ReactMarkdown from "react-markdown"
-import styles from "./Chatbox.module.scss" // Keep your custom styles
+import styles from "./ChatBox.module.scss" // Keep your custom styles
 import { Send } from "lucide-react"
 
 interface Message {
