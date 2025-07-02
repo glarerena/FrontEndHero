@@ -1,0 +1,153 @@
+$primary:      #684996; // deep purple
+$accent:       #f9ca48; // sunny yellow
+$bg-cream:     #f2f1e9; // soft cream background
+$teal:         #8dafaf; // teal 
+$light:        #b9c3fa; // light purple
+$white:        #ffffff;
+$hover:        darken($accent, 5%);
+$border-radius: 6px;
+$box-shadow:   0 4px 12px rgba(0, 0, 0, 0.15);
+
+
+
+.wrapper {
+  position: fixed;
+  top: 50px;
+  right: 50px;
+  z-index: 1000;
+
+  .container {
+    width: 330px;
+    height: 450px;
+    background-color: $bg-cream;
+    border: 1px solid $primary;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    display: flex;
+    flex-direction: column;
+    color: #1e1e1e;
+    font-family: sans-serif;
+    overflow: hidden;
+  }
+
+  .header {
+    display: flex;
+    padding: 12px 12px;
+    background-color: $primary;
+    border: $primary;
+    color: $white;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .headerTitle {
+    flex: 1;                  // take up all available space
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .headerIcon {
+    width: 60px;              // adjust as you like
+    height: 60px;
+    cursor: pointer;
+    margin-left: 12px;        // small gap from the title
+  }
+
+  .content {
+    flex: 1;
+    padding: 6px;
+    overflow-y: auto;
+
+    .message {
+      margin: 6px 0;
+      word-break: break-word;
+      max-width: 80%;
+      padding: 6px;
+      border-radius: $border-radius;
+      font-size: 16px;
+    
+    }
+    .userMessage {
+      background-color: $teal;
+      color: black;
+      align-self: flex-end;
+      font-size: 16px;
+      margin-left: auto;
+    }
+
+    .assistantMessage {
+      background-color: $light;
+      color: black;
+      align-self: flex-start;
+      font-size: 16px;
+      margin-right: auto;
+    }
+
+    .error {
+      color: red;
+      margin: 6px 0;
+    }
+  }
+
+  .inputArea {
+    padding: 12px;
+    border-top: 1px solid $primary;
+    display: flex;
+    gap: 8px;
+  }
+
+  .input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid $primary;
+    border-radius: $border-radius;
+    background-color: $white;
+    color: #1e1e1e;
+    font-size: 16px;
+  }
+
+  .sendButton {
+    padding: 8px;
+    background-color: $primary;
+    color: $white;
+    border: none;
+    border-radius: $border-radius;
+    cursor: pointer;
+    font-weight: bold;
+
+    &:hover {
+      background-color: $hover;
+    }
+  }
+
+  .sendButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+  .fab {
+    background-color: $bg-cream;
+    padding: 4px;
+    border-radius: 50%;
+    border: 2px solid $primary;
+    cursor: pointer;
+    box-shadow: $box-shadow;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: $hover;
+    }
+  }
+
+  .fabImage {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+  }
+}
