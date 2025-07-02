@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from "react"
 import ReactMarkdown from "react-markdown"
-import styles from "./ChatBox.module.scss" // Keep your custom styles
+import styles from "./ChatBox.module.scss"
 import { Send } from "lucide-react"
 
 interface Message {
-  role: 'user' | 'assistant';
-  content: string;
+  role: 'user' | 'assistant'
+  content: string
 }
 
 export default function ChatBox() {
@@ -39,20 +39,22 @@ export default function ChatBox() {
     setMessages(updatedMessages)
 
     try {
-      const res = await fetch("http://localhost:3005/chatbot", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_LLM_URL}/chatbot`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: question,
-          history: messages
+          history: messages,
         }),
       })
 
       if (!res.ok) throw new Error("Something went wrong")
 
       const data = await res.json()
-
-      const assistantMessage: Message = { role: 'assistant', content: data.response }
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: data.response,
+      }
       setMessages([...updatedMessages, assistantMessage])
     } catch {
       setError("Failed to fetch response.")
@@ -64,10 +66,13 @@ export default function ChatBox() {
 
   const toggleMinimize = () => {
     if (open) {
-      setMessages([{
-        role: 'assistant',
-        content: "👋 Hello! I'm HERO — your Housing Essential Resource Organizer, to help navigate housing support across the Bay Area.\n\n⚠️ *This chatbot is an experimental tool. Please verify all information with official housing resources before making decisions.*\n\nHow can I help you today?"
-      }])
+      setMessages([
+        {
+          role: 'assistant',
+          content:
+            "👋 Hello! I'm HERO — your Housing Essential Resource Organizer, to help navigate housing support across the Bay Area.\n\n⚠️ *This chatbot is an experimental tool. Please verify all information with official housing resources before making decisions.*\n\nHow can I help you today?",
+        },
+      ])
     }
     setOpen(!open)
   }
@@ -76,7 +81,7 @@ export default function ChatBox() {
     if (e.key === "Enter") {
       e.preventDefault()
       const fakeFormEvent = {
-        preventDefault: () => {}
+        preventDefault: () => {},
       } as React.FormEvent<HTMLFormElement>
       handleSubmit(fakeFormEvent)
     }
@@ -101,16 +106,18 @@ export default function ChatBox() {
 
           <div className={styles.content}>
             {messages.map((msg, i) => {
-              const isAssistant = msg.role === "assistant";
+              const isAssistant = msg.role === "assistant"
               const parts = isAssistant
                 ? msg.content.split("\n\n")
-                : [msg.content];
+                : [msg.content]
 
               return (
                 <div
                   key={i}
                   className={`${styles.message} ${
-                    isAssistant ? styles.assistantMessage : styles.userMessage
+                    isAssistant
+                      ? styles.assistantMessage
+                      : styles.userMessage
                   }`}
                 >
                   <strong>{msg.role === "user" ? "You" : "Hero"}:</strong>{" "}
@@ -133,7 +140,11 @@ export default function ChatBox() {
                         <ReactMarkdown
                           components={{
                             a: (props) => (
-                              <a {...props} target="_blank" rel="noopener noreferrer">
+                              <a
+                                {...props}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
                                 {props.children}
                               </a>
                             ),
@@ -156,7 +167,7 @@ export default function ChatBox() {
               ref={inputRef}
               className={styles.input}
               value={question}
-              onChange={e => setQuestion(e.target.value)}
+              onChange={(e) => setQuestion(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="How can I assist?"
               disabled={loading}
@@ -168,13 +179,21 @@ export default function ChatBox() {
               disabled={loading}
               aria-label="Send message"
             >
-              {loading ? <span className={styles.spinner} /> : <Send size={20} />}
+              {loading ? (
+                <span className={styles.spinner} />
+              ) : (
+                <Send size={20} />
+              )}
             </button>
           </form>
         </div>
       ) : (
         <button className={styles.fab} onClick={toggleMinimize}>
-          <img src="/purple_house.png" alt="Open chat" className={styles.fabImage} />
+          <img
+            src="/purple_house.png"
+            alt="Open chat"
+            className={styles.fabImage}
+          />
         </button>
       )}
     </div>
